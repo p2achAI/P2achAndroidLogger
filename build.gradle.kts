@@ -5,24 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "com.p2ach.logutil"
+    namespace = "com.p2ach.logger"
     compileSdk = 34
-
     defaultConfig {
         minSdk = 21
         consumerProguardFiles("consumer-rules.pro")
     }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -31,5 +19,19 @@ android {
 }
 
 dependencies {
-    implementation "com.orhanobut:logger:2.2.0"
+    // 외부 프로젝트에도 전이되게 하려면 api
+    api("com.orhanobut:logger:2.2.0")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                groupId = "com.github.p2achAI"      // JitPack 규칙
+                artifactId = "P2achAndroidLogger"   // 원하는 아티팩트명
+                version = "unspecified"             // JitPack이 태그로 대체
+                from(components["release"])
+            }
+        }
+    }
 }
