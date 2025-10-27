@@ -31,18 +31,5 @@ android {
 }
 
 dependencies {
-    api("com.orhanobut:logger:2.2.0")
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                groupId = "com.github.p2achAI"
-                artifactId = "P2achAndroidLogger"
-                version = "unspecified"
-                from(components["release"])
-            }
-        }
-    }
+    implementation "com.orhanobut:logger:2.2.0"
 }
