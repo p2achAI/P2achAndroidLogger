@@ -1,17 +1,48 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 android {
-    namespace "ai.p2ach.sehoon.logutil"
-    compileSdk 34
+    namespace = "com.p2ach.logutil"
+    compileSdk = 34
 
     defaultConfig {
-        minSdk 21
+        minSdk = 21
+        consumerProguardFiles("consumer-rules.pro")
     }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = "17" }
 }
 
 dependencies {
-    implementation "com.orhanobut:logger:2.2.0"
+    api("com.orhanobut:logger:2.2.0")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                groupId = "com.github.p2achAI"
+                artifactId = "P2achAndroidLogger"
+                version = "unspecified"
+                from(components["release"])
+            }
+        }
+    }
 }
